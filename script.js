@@ -1,125 +1,136 @@
-class ContaBancaria {
-    constructor(titular, numeroConta) {
-        this.titular = titular;
-        this.saldo = 0;
-        this.numeroConta = numeroConta;
-    }
 
-    depositar(valor) {
-        if (valor > 0) {
-            this.saldo += valor;
-            alert(`Depósito de R$${valor.toFixed(2)} realizado com sucesso!`);
-        } else {
-            alert("O valor para depósito deve ser positivo.");
+const teclado = require("prompt-sync")({sigint:true}); 
+
+class Conta {
+    constructor(numero){
+        this.numero = numero;
+    }
+}
+
+class contaBancaria { 
+        constructor() {
+            this.NumeroConta = 1000;
+            this.contas = [];
         }
+
+    GerarNumC(){ 
+        this.NumeroConta += 1;
+        return this.NumeroConta
     }
 
-    sacar(valor) {
-        if (valor > 0 && valor <= this.saldo) {
-            this.saldo -= valor;
-            alert(`Saque de R$${valor.toFixed(2)} realizado com sucesso!`);
-        } else if (valor > this.saldo) {
-            alert("Saldo insuficiente para realizar o saque.");
-        } else {
-            alert("O valor para saque deve ser positivo.");
+    criaconta(nome, saldoInicial){ 
+        const novoNumeroConta = this.GerarNumC();
+        const novaConta = new Conta(novoNumeroConta);
+        this.contas.push({ numero: novoNumeroConta, titular: nome, saldo: saldoInicial });
+        console.log(`Conta criada: ${novoNumeroConta}`);
+        return novaConta;
+    }
+    
+    depositar(numeroConta, valor) {  
+        const conta = this.contas.find(c => c.numero === numeroConta); 
+        if (!conta) {
+            console.log("Conta não encontrada");
+            return;
         }
+        if (typeof valor !== 'number' || valor <= 0) {
+            console.log("Valor inválido");
+            return;
+    }
+    conta.saldo += valor;  
+        console.log(`Depósito realizado, seu saldo atual é de: ${conta.saldo}`);
+    }   
+
+    sacar(numeroConta, valor) { 
+        const conta = this.contas.find(c => c.numero === numeroConta);
+        if (!conta) { 
+            console.log("Conta não encontrada");
+            return;
+        } 
+        if (typeof valor !== 'number' || valor <= 0) { 
+            console.log("Valor inválido");
+            return;
+        }
+        if (valor > conta.saldo) {
+            console.log("Saldo insuficiente");
+            return;
+        } 
+        conta.saldo -= valor;
+        console.log(`Saque realizado, seu saldo atual é de: ${conta.saldo}`);
     }
 
-    consultarSaldo() {
-        alert(`Saldo atual: R$${this.saldo.toFixed(2)}`);
+    consultar(numeroConta) {
+        const conta = this.contas.find(c => c.numero === numeroConta); 
+        if (!conta) { 
+            console.log("Conta não encontrada");
+            return;
+        } 
+        console.log(`Seu saldo atual é de: ${conta.saldo}`);
     }
-}
 
-const contas = [];
-
-function criarConta(titular, numeroConta) {
-    const conta = new ContaBancaria(titular, numeroConta);
-    contas.push(conta);
-    alert(`Conta criada para ${titular} com número: ${numeroConta}`);
-}
-
-function depositar(numeroConta, valor) {
-    const conta = contas.find(c => c.numeroConta === numeroConta);
-    if (conta) {
-        conta.depositar(valor);
-    } else {
-        alert("Conta não encontrada.");
-    }
-}
-
-function sacar(numeroConta, valor) {
-    const conta = contas.find(c => c.numeroConta === numeroConta);
-    if (conta) {
-        conta.sacar(valor);
-    } else {
-        alert("Conta não encontrada.");
-    }
-}
-
-function consultarSaldo(numeroConta) {
-    const conta = contas.find(c => c.numeroConta === numeroConta);
-    if (conta) {
-        conta.consultarSaldo();
-    } else {
-        alert("Conta não encontrada.");
-    }
-}
-
-function listarContas() {
-    if (contas.length === 0) {
-        alert("Não há contas cadastradas.");
-    } else {
-        let lista = "Contas cadastradas:\n";
-        contas.forEach(conta => {
-            lista += `Titular: ${conta.titular}, Número da conta: ${conta.numeroConta}, Saldo: R$${conta.saldo.toFixed(2)}\n`;
+    listarContas() { 
+        console.log("Contas existentes:");
+        this.contas.forEach(conta => {
+            console.log(`Número: ${conta.numero}, Titular: ${conta.titular}, Saldo: ${conta.saldo}`);
         });
-        alert(lista);
     }
 }
 
-function menu() {
-    let opcao;
-    do {
-        opcao = prompt(
-            "--- Sistema Bancário ---\n" +
-            "1. Criar nova conta\n" +
-            "2. Depositar\n" +
-            "3. Sacar\n" +
-            "4. Consultar saldo\n" +
-            "5. Listar todas as contas\n" +
-            "6. Sair\n" +
-            "Escolha uma opção:"
-        );
+const meuBanco = new contaBancaria();
+let aplicativoExe = true
 
-        switch (opcao) {
-            case '1':
-                const titular = prompt("Digite o nome do titular: ");
-                const numeroConta = prompt("Digite o número da conta: ");
-                criarConta(titular, numeroConta);
-                break;
-            case '2':
-                const numeroContaDep = prompt("Digite o número da conta para depósito: ");
-                const valorDep = parseFloat(prompt("Digite o valor do depósito: "));
-                depositar(numeroContaDep, valorDep);
-                break;
-            case '3':
-                const numeroContaSac = prompt("Digite o número da conta para saque: ");
-                const valorSac = parseFloat(prompt("Digite o valor do saque: "));
-                sacar(numeroContaSac, valorSac);
-                break;
-            case '4':
-                const numeroContaSaldo = prompt("Digite o número da conta para consultar saldo: ");
-                consultarSaldo(numeroContaSaldo);
-                break;
-            case '5':
-                listarContas();
-                break;
-            case '6':
-                alert("Saindo do sistema...");
-                break;
-            default:
-                alert("Opção inválida. Tente novamente.");
-                break;
-        }
-    } while (opcao !== '6');
+while (aplicativoExe) {
+
+    console.log("---------------------------")
+    console.log("1. Criar Conta");
+    console.log("2. Depositar");
+    console.log("3. Sacar");
+    console.log("4. Consultar Saldo");
+    console.log("5. Listar Contas Existentes");
+    console.log("6. Sair")
+    console.log("---------------------------")
+
+    let valor = parseInt(teclado("Digite o sua ação conforme o número da linha: ")); 
+
+    switch (valor) { 
+
+        case 1:
+            console.log("** VOCÊ ESTÁ CRIANDO UMA NOVA CONTA **");
+            const nome = teclado("Digite o nome do titular: ");
+            const saldoInicial = 0;
+            meuBanco.criaconta(nome, saldoInicial);
+            break;
+
+        case 2:
+            const numeroContaDeposito = parseInt(teclado("Digite o número da conta: "));
+            const valorDeposito = parseFloat(teclado("Digite o valor que quer DEPOSITAR: "));
+            meuBanco.depositar(numeroContaDeposito, valorDeposito);
+            break;
+
+        case 3:
+            const numeroContaSaque = parseInt(teclado("Digite o número da conta: "));
+            const valorSaque = parseFloat(teclado("Digite o valor que quer SACAR: "));
+            meuBanco.sacar(numeroContaSaque, valorSaque);
+            break;
+
+        case 4:
+            const numeroContaConsulta = parseInt(teclado("Digite o número da conta: "));
+            meuBanco.consultar(numeroContaConsulta);
+            break;
+
+        case 5:
+            meuBanco.listarContas();
+            break;
+
+        case 6:
+            console.clear();
+            console.log("### EXECUÇÃO ENCERRADA ###");
+            aplicativoExe = false;
+            break;
+
+        default:
+            console.log("Dados Não identificados, tente novamente");
+            aplicativoExe = true
+            break;
+    }
 }
+   
