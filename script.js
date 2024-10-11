@@ -37,13 +37,13 @@ class contaBancaria {
             return;
     }
     conta.saldo += valor;  
-        console.log(`Depósito realizado, seu saldo atual é de: ${conta.saldo}`);
+        console.log(`Depósito realizado,seu saldo é de: ${conta.saldo}`);
     }   
 
     sacar(numeroConta, valor) { 
         const conta = this.contas.find(c => c.numero === numeroConta);
         if (!conta) { 
-            console.log("Conta não encontrada");
+            console.log("Conta não localizada");
             return;
         } 
         if (typeof valor !== 'number' || valor <= 0) { 
@@ -55,16 +55,16 @@ class contaBancaria {
             return;
         } 
         conta.saldo -= valor;
-        console.log(`Saque realizado, seu saldo atual é de: ${conta.saldo}`);
+        console.log(`Saque realizado,seu saldo é de: ${conta.saldo}`);
     }
 
     consultar(numeroConta) {
         const conta = this.contas.find(c => c.numero === numeroConta); 
         if (!conta) { 
-            console.log("Conta não encontrada");
+            console.log("Conta não localizada");
             return;
         } 
-        console.log(`Seu saldo atual é de: ${conta.saldo}`);
+        console.log(`Seu saldo é de: ${conta.saldo}`);
     }
 
     listarContas() { 
@@ -89,26 +89,26 @@ while (aplicativoExe) {
     console.log("6. Sair")
     console.log("---------------------------")
 
-    let valor = parseInt(teclado("Digite o sua ação conforme o número da linha: ")); 
+    let valor = parseInt(teclado("Digite a sua ação conforme os números: ")); 
 
     switch (valor) { 
 
         case 1:
-            console.log("** VOCÊ ESTÁ CRIANDO UMA NOVA CONTA **");
-            const nome = teclado("Digite o nome do titular: ");
+            console.log("** você criou uma nova conta **");
+            const nome = teclado("Digite o nome do titular da conta: ");
             const saldoInicial = 0;
             meuBanco.criaconta(nome, saldoInicial);
             break;
 
         case 2:
             const numeroContaDeposito = parseInt(teclado("Digite o número da conta: "));
-            const valorDeposito = parseFloat(teclado("Digite o valor que quer DEPOSITAR: "));
+            const valorDeposito = parseFloat(teclado("Digite o valor que quer depositar: "));
             meuBanco.depositar(numeroContaDeposito, valorDeposito);
             break;
 
         case 3:
             const numeroContaSaque = parseInt(teclado("Digite o número da conta: "));
-            const valorSaque = parseFloat(teclado("Digite o valor que quer SACAR: "));
+            const valorSaque = parseFloat(teclado("Digite o valor que quer sacar: "));
             meuBanco.sacar(numeroContaSaque, valorSaque);
             break;
 
@@ -123,7 +123,7 @@ while (aplicativoExe) {
 
         case 6:
             console.clear();
-            console.log("### EXECUÇÃO ENCERRADA ###");
+            console.log("### aplicativo encerrado ###");
             aplicativoExe = false;
             break;
 
